@@ -1,0 +1,34 @@
+with feb_table as (
+	SELECT
+	quest_rk,
+	count(*) as cnt,
+	sum(game_flg) as h,
+	CAST(sum(game_flg) as float) / CAST(count(*) as float) as ratio_feb
+	FROM 
+	cource_analytics.game
+	WHERE date_part('month', CAST(game_dttm AS date)) = 2
+	GROUP BY 1
+	),
+jan_table as (
+	SELECT
+	quest_rk,
+	count(*) as cnt,
+	sum(game_flg) as h,
+	CAST(sum(game_flg) as float) / CAST(count(*) as float) as ratio_jan
+	FROM 
+	cource_analytics.game
+	WHERE date_part('month', CAST(game_dttm AS date)) = 1
+	GROUP BY 1
+	)
+
+
+SELECT
+	a.quest_rk, a.ratio_feb, b.ratio_jan,
+	ABS(CAST(a.ratio_feb as float) - CAST(b.ratio_jan as float)) as difference
+FROM
+	feb_table a
+	INNER JOIN
+	jan_table b
+	ON
+	a.quest_rk = b.quest_rk
+ORDER BY difference desc
