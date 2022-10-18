@@ -1,0 +1,8 @@
+SELECT DISTINCT
+	a.partner_rk, b.location_rk
+FROM 
+	cource_analytics.legend a
+	LEFT JOIN
+	cource_analytics.location b
+	ON a.partner_rk = b.partner_rk
+WHERE b.location_rk IS NULL
